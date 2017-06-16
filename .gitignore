@@ -1,0 +1,7 @@
+bin/
+bin/
+include/
+lib/
+pip-selfcheck.json
+**.tags
+
