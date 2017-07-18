@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 # vim:fenc=utf-8
-# Last modified: 2017-06-16 14:33:27
+# Last modified: 2017-07-19 02:09:07
 
 import os
 import sys
@@ -10,7 +10,7 @@ import logging
 import subprocess
 
 import click
-from package.environment_config import Rsync_Config
+from .environment_config import Rsync_Config
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers.api import DEFAULT_OBSERVER_TIMEOUT
