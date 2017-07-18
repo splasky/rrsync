@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 # vim:fenc=utf-8
-# Last modified: 2017-06-16 14:32:57
+# Last modified: 2017-07-19 02:07:01
 
 from setuptools import setup, find_packages
 
@@ -24,7 +24,7 @@ setup(
     zip_safe=False,
     entry_points={
         'console_scripts': [
-            'rrsync=rrsync.rrsync:main'
+            'rrsync=src.rrsync:main'
         ]
     },
     install_requires=install_requires
