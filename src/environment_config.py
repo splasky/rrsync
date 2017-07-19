@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 # vim:fenc=utf-8
-# Last modified: 2017-05-29 09:54:26
+# Last modified: 2017-07-19 17:18:22
 
 import json
 import os
@@ -88,8 +88,9 @@ class Rsync_Config(object):
         '''modify config file'''
         try:
             self.show_current_settings()
-            self.make_config(self.config_file_path)
-            print("Change config file success.")
+            # TODO:unmodify yet
+
+            logging.debug("Change config file success.")
             return True
         except:
             return False
