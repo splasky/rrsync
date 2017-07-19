@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 # vim:fenc=utf-8
-# Last modified: 2017-07-19 09:27:24
+# Last modified: 2017-07-19 09:31:01
 
 import os
 import sys
@@ -16,7 +16,9 @@ from watchdog.events import FileSystemEventHandler
 from watchdog.observers.api import DEFAULT_OBSERVER_TIMEOUT
 
 
+FILE_NAME = ".log"
 logging.basicConfig(level=logging.INFO,
+                    filename=FILE_NAME,
                     format='%(asctime)s - %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
 
