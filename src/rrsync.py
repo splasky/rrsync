@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 # vim:fenc=utf-8
-# Last modified: 2017-07-19 02:09:07
+# Last modified: 2017-07-19 09:10:47
 
 import os
 import sys
@@ -36,10 +36,11 @@ def _get_what(event):
     return 'directory' if event.is_directory else 'file'
 
 
-class RSyncEventHandler(FileSystemEventHandler):
+class RSyncEventHandler(FileSystemEventHandler, Rsync_Config):
     """RSync when the events captured."""
 
     def __init__(self, local_path, remote_path, rsync_options=''):
+        super(RSyncEventHandler, self).__init__()
         self.local_path = os.path.join(local_path)
         self.remote_path = remote_path
         self.rsync_options = rsync_options.split()
