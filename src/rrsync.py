@@ -156,9 +156,17 @@ def check_subprocess(command):
 )
 @click.option('--rsync-options', default='', help='rsync command options')
 @click.option('--modify_config', is_flag=True, help='modify rsync config')
+@click.option('--send_ssh_keygen', is_flag=True, help='send ssh keygen to remote')
 def main(
     local_path, observer_timeout, rsync_options, modify_config
 ):
+    event_handler = RSyncEventHandler(local_path,
+                                      remote_path,
+                                      rsync_options)
+
+    observer = Observer(timeout=observer_timeout)
+    observer.schedule(event_handler, local_path, recursive=True)
+
     rsync = Rsync_Config()
     if not rsync.check_config():
         rsync.make_config()
@@ -179,12 +187,6 @@ def main(
     if rsync.get_configs.get("git") == 'y':
         rsync_options += "--exclude-from=.gitignore "
 
-    event_handler = RSyncEventHandler(local_path,
-                                      remote_path,
-                                      rsync_options)
-
-    observer = Observer(timeout=observer_timeout)
-    observer.schedule(event_handler, local_path, recursive=True)
     observer.start()
     try:
         while True:
