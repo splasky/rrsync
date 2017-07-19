@@ -6,3 +6,6 @@ pip-selfcheck.json
 **.tags
 **mypy_cache/
 
+*.cache
+*.log
+*__pycache__/
