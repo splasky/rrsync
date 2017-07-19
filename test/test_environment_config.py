@@ -1,19 +1,19 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 # vim:fenc=utf-8
-# Last modified: 2017-07-19 17:17:36
+# Last modified: 2017-07-19 17:57:51
 
-from src.rrsync import main
+from src.environment_config import Rsync_Config
 import os
 import pytest
 
 
 class TestSetup:
 
-    def __init__(self, tmpdir):
-        self.remote_dir = str(tmpdir.mkdir('remote'))
-        self.local_dir = str(tmpdir.mkdir('local'))
-        self.rrsync = Rsync_config(self.local_dir)
+    def __init__(self, reomte_dir, local_dir):
+        self.remote_dir = remote_dir()
+        self.local_dir = local_dir()
+        self.rrsync = Rsync_Config(self.local_dir)
         self.set_up_local()
         self.set_up_remote()
 
@@ -24,11 +24,22 @@ class TestSetup:
         self.rrsync.config["host"] = ""
         self.rrsync.config["git"] = "y"
         self.rrsync.config["remote_directory"] = self.remote_dir
+        self.rrsync.config_file_path = os.path.join(self. local_dir, ".rsync_config")
 
 
-@pytest.fixture()
+@pytest.fixture(scope='session')
+def remote_dir(tmpdir_factory):
+    return str(tmpdir_factory.mktemp('remote'))
+
+
+@pytest.fixture(scope='session')
+def local_dir(tmpdir_factory):
+    return str(tmpdir_factory.mktemp('local'))
+
+
+@pytest.fixture(scope='session')
 def setup():
-    return TestSetup()
+    return TestSetup(remote_dir, local_dir)
 
 
 def test_check_config(setup):
@@ -46,6 +57,7 @@ def test_make_input(setup):
 
 
 def test_load_config(setup):
+    setup.rrsync.make_config()
     assert setup.rrsync.load_config()
 
 
