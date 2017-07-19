@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 # vim:fenc=utf-8
-# Last modified: 2017-07-19 09:31:01
+# Last modified: 2017-07-19 15:13:11
 
 import os
 import sys
@@ -158,7 +158,7 @@ def check_subprocess(command):
 )
 @click.option('--rsync-options', default='', help='rsync command options')
 @click.option('--modify_config', is_flag=True, help='modify rsync config')
-@click.option('--send_ssh_keygen', is_flag=True, help='send ssh keygen to remote')
+@click.option('--send_ssh_key', is_flag=True, help='send ssh keygen to remote')
 def main(
     local_path, observer_timeout, rsync_options, modify_config, send_ssh_key
 ):
