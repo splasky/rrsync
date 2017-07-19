@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 # vim:fenc=utf-8
-# Last modified: 2017-07-19 09:10:47
+# Last modified: 2017-07-19 09:27:24
 
 import os
 import sys
@@ -129,8 +129,8 @@ def send_ssh_keygen(host):
         generate_keygen = click.prompt("generate new ssh keygen?(y/n)")
         if generate_keygen == "y":
             subprocess.run(['ssh-keygen'])
-        subprocess.run(['ssh-add'])
-        cmd = 'ssh-copy-id {}'.format(host)
+            subprocess.run(['ssh-add'])
+        cmd = 'ssh-copy-id -i {}'.format(host)
         subprocess.run(cmd.split(" "))
         click.echo("send ssh keygen finish!")
 
