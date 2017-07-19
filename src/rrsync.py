@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 # vim:fenc=utf-8
-# Last modified: 2017-07-19 09:31:01
+# Last modified: 2017-07-19 15:52:37
 
 import os
 import sys
@@ -38,11 +38,10 @@ def _get_what(event):
     return 'directory' if event.is_directory else 'file'
 
 
-class RSyncEventHandler(FileSystemEventHandler, Rsync_Config):
+class RSyncEventHandler(FileSystemEventHandler):
     """RSync when the events captured."""
 
     def __init__(self, local_path, remote_path, rsync_options=''):
-        super(RSyncEventHandler, self).__init__()
         self.local_path = os.path.join(local_path)
         self.remote_path = remote_path
         self.rsync_options = rsync_options.split()
@@ -158,33 +157,34 @@ def check_subprocess(command):
 )
 @click.option('--rsync-options', default='', help='rsync command options')
 @click.option('--modify_config', is_flag=True, help='modify rsync config')
-@click.option('--send_ssh_keygen', is_flag=True, help='send ssh keygen to remote')
+@click.option('--send_ssh_key', is_flag=True, help='send ssh keygen to remote')
 def main(
     local_path, observer_timeout, rsync_options, modify_config, send_ssh_key
 ):
     check_subprocess('rsync')
 
-    # set disable from .gitignore default
-    if event_handler.get_configs.get("git") == 'y':
+    rsync = Rsync_Config()
+    if not rsync.check_config():
+        rsync.make_config()
+    else:
+        rsync.load_config()
+
+    if rsync.get_configs.get("git") == 'y':
         rsync_options += "--exclude-from=.gitignore "
+
+    if send_ssh_key is True:
+        send_ssh_keygen(rsync.get_configs.get("host"))
+
+    if modify_config is True:
+        rsync.modify_config()
+        sys.exit(0)
+
+    remote_path = rsync.get_configs.get("host") + ":" +\
+        rsync.get_configs.get("remote_directory")
 
     event_handler = RSyncEventHandler(local_path,
                                       remote_path,
                                       rsync_options)
-    if modify_config is True:
-        event_handler.modify_config()
-        sys.exit(0)
-
-    if not observer.check_config():
-        event_handler.make_config()
-    else:
-        event_handler.load_config()
-
-    if send_ssh_key is True:
-        send_ssh_keygen(event_handler.get_configs.get("host"))
-
-    remote_path = event_handler.get_configs.get("host") + ":" +\
-        event_handler.get_configs.get("remote_directory")
 
     observer = Observer(timeout=observer_timeout)
     observer.schedule(event_handler, local_path, recursive=True)
