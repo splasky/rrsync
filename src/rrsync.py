@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 # vim:fenc=utf-8
-# Last modified: 2017-07-19 15:34:22
+# Last modified: 2017-07-19 15:52:37
 
 import os
 import sys
@@ -162,16 +162,29 @@ def main(
     local_path, observer_timeout, rsync_options, modify_config, send_ssh_key
 ):
     check_subprocess('rsync')
-    event_handler = RSyncEventHandler(local_path,
-                                      remote_path,
-                                      rsync_options)
 
     rsync = Rsync_Config()
     if not rsync.check_config():
         rsync.make_config()
-        send_ssh_keygen(rsync.get_configs.get("host"))
     else:
         rsync.load_config()
+
+    if rsync.get_configs.get("git") == 'y':
+        rsync_options += "--exclude-from=.gitignore "
+
+    if send_ssh_key is True:
+        send_ssh_keygen(rsync.get_configs.get("host"))
+
+    if modify_config is True:
+        rsync.modify_config()
+        sys.exit(0)
+
+    remote_path = rsync.get_configs.get("host") + ":" +\
+        rsync.get_configs.get("remote_directory")
+
+    event_handler = RSyncEventHandler(local_path,
+                                      remote_path,
+                                      rsync_options)
 
     observer = Observer(timeout=observer_timeout)
     observer.schedule(event_handler, local_path, recursive=True)
